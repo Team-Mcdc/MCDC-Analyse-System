@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.BookDao">
+	<!-- 查询 -->
+	<select id="selectbook"  resultType="po.Book">
+		select * from bookinfo
+	</select>
+	<select id="selectothorbook" resultType="po.Book">
+        select * from bookinfo
+        <where>
+            <!-- 排除特定单位的条件 -->
+            AND unit != #{unit}
+        </where>
+    </select>
+	<select id="selectownbook"  resultType="po.Book">
+		select * from bookinfo where unit = #{unit}
+	</select>
+	
+	<select id="selectbookbystate"  resultType="po.Book">
+		select * from bookinfo where flow = #{flow}
+	</select>
+	
+	<select id="selectbookbyunit"  resultType="po.Book">
+		select * from bookinfo where unit = #{unit}
+	</select>
+	<select id="selectbookbyid"  resultType="po.Book">
+		select * from bookinfo where BookID = #{bookid}
+	</select>
+	<select id="selectUserByname"  resultType="po.User">
+		select * from user where Username = #{username}
+	</select>
+	<select id="selectUserBynametolist"  resultType="po.User">
+		select * from user where Username = #{username}
+	</select>
+	<select id="selectroleByid"  resultType="po.User">
+		select * from role where RoleID = #{roleid}
+	</select>
+	<select id="selectunitByname"  resultType="po.User">
+		select * from unit where ContactPerson = #{contactperson}
+	</select>
+	<select id="selectUserByid"  resultType="po.User">
+		select * from role where UserID = #{userid}
+	</select>
+	<select id="selectbookbykeyword" resultType="po.Book" parameterType="string">
+    SELECT * FROM bookinfo
+    WHERE 
+    BookName LIKE CONCAT('%', #{search}, '%') OR
+    BookID LIKE CONCAT('%', #{search}, '%') OR
+    Author LIKE CONCAT('%', #{search}, '%') OR
+    Publisher LIKE CONCAT('%', #{search}, '%')
+
+	</select>
+	
+	<!-- 添加-->
+	<insert id="addbook" parameterType="po.Book">
+    INSERT INTO bookinfo (BookName, Author, Publisher, PublicationDate, Pages,unit,Price,BookCategory,state,ImagePath,flow)
+    VALUES (#{bookname}, #{author}, #{publisher}, #{publicationdate}, #{pages},#{unit},#{price},#{bookcategory},#{state},#{imagepath},#{flow})
+</insert>
+
+	<!-- 添加一个用户到role ，#{uname}为com.po.MyUser的属性值-->
+	<insert id="addrole" parameterType="po.User">
+		insert into role (RoleName) values(#{rolename})
+	</insert>
+	<insert id="adduserrole" parameterType="po.User">
+		insert into userrole (UserID,RoleID) values(#{userid},#{roleid})
+	</insert>
+	<insert id="addunit" parameterType="po.User">
+		insert into unit (UnitName,ContactPerson,ContactPhone,EmailAddress,ContactAddress) values(#{unitname},#{contactperson},#{contactphone},#{emailaddress},#{contactaddress})
+	</insert>
+	
+	<!-- 修改一个图书 -->
+	<update id="updatebookinfo" parameterType="po.Book">
+		update bookinfo set BookName = #{bookname},PublicationDate = #{publicationdate},Pages = #{pages},Author= #{author},Publisher= #{publisher},BookCategory = #{bookcategory},Price = #{price} where BookID = #{bookid}
+	</update>
+	<update id="updatebookstate" parameterType="po.Book">
+		update bookinfo set state = #{state} where BookID = #{bookid}
+	</update>
+	<update id="updatebookflow" parameterType="po.Book">
+		update bookinfo set flow = #{flow} where BookID = #{bookid}
+	</update>
+	
+	<!-- 删除图书 -->
+	<delete id="deletebook" parameterType="String"> 
+		delete from bookinfo where BookID = #{bookid}
+	</delete>
+	<delete id="deleteuserrole" parameterType="String"> 
+		delete from userrole  where UserID= #{userid}
+	</delete>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserDao">
+	<!-- 查询 -->
+	<select id="selectUser"  resultType="po.User">
+		select * from user
+	</select>
+	<select id="selectrole"  resultType="po.User">
+		select * from role
+	</select>
+	<select id="selectuserrole"  resultType="po.User">
+		select * from userrole
+	</select>
+	<select id="selectroleidByid"  resultType="String">
+		select RoleID from userrole where UserID = #{userid}
+	</select>
+	<select id="selectUserByname"  resultType="po.User">
+		select * from user where Username = #{username}
+	</select>
+	<select id="selectUserBynametolist"  resultType="po.User">
+		select * from user where Username = #{username}
+	</select>
+	<select id="selectroleByid"  resultType="po.User">
+		select * from role where RoleID = #{roleid}
+	</select>
+	<select id="selectunitByname"  resultType="po.User">
+		select * from unit where ContactPerson = #{contactperson}
+	</select>
+	<select id="selectUserByid"  resultType="po.User">
+		select * from role where UserID = #{userid}
+	</select>
+	
+
+	<insert id="addrole" parameterType="po.User">
+		insert into role (RoleName) values(#{rolename})
+	</insert>
+	<insert id="adduserrole" parameterType="po.User">
+		insert into userrole (UserID,RoleID) values(#{userid},#{roleid})
+	</insert>
+	<insert id="addunit" parameterType="po.User">
+		insert into unit (UnitName,ContactPerson,ContactPhone,EmailAddress,ContactAddress) values(#{unitname},#{contactperson},#{contactphone},#{emailaddress},#{contactaddress})
+	</insert>
+	<insert id="adduser" parameterType="po.User">
+		insert into user (Username,Password,RealName,ContactPhone,Email,Address,Gender,question) values(#{username},#{password},#{realname},#{contactphone},#{email},#{address},#{gender},#{question})
+	</insert>
+	
+	<!-- 更新用户登陆时间-->
+	<update id="updatelogintime" parameterType="po.User">
+		update user set LoginTime = NOW() where Username=#{username}
+	</update>
+	<update id="updatelastlogintime" parameterType="po.User">
+		update user set LastLoginTime = #{lastlogintime} where Username=#{username}
+	</update>
+	<update id="updatepassword" parameterType="po.User">
+		update user set Password = #{password} where UserID=#{userid}
+	</update>
+	
+	
+	<insert id="addcomment" parameterType="po.User">
+		insert into comments (name,comments) values(#{name},#{comments})
+	</insert>
+	<!-- 修改一个用户 -->
+	<update id="updateUser" parameterType="po.User">
+		update user set WorkPlace = #{workplace},Username = #{username},Gender = #{gender},RealName = #{realname},ContactPhone = #{contactphone},Address = #{address} where UserID = #{userid}
+	</update>
+	<update id="updaterole" parameterType="po.User">
+		update role set RoleName = #{rolename} where RoleID = #{roleid}
+	</update>
+	<update id="updateunit" parameterType="po.User">
+		update unit set UnitName = #{unitname},ContactPhone = #{contactphone},ContactAddress = #{address} where ContactPerson = #{realname}
+	</update>
+	<update id="updatereader" parameterType="po.User">
+		update user set Username = #{username},Gender = #{gender},RealName = #{realname},ContactPhone = #{contactphone},Address = #{address} where UserID = #{userid}
+	</update>
+	
+	<!-- 删除一个用户 -->
+	<delete id="deleteuser" parameterType="String"> 
+		delete from user where Username = #{username}
+	</delete>
+	<delete id="deleteuserrole" parameterType="String"> 
+		delete from userrole  where UserID= #{userid}
+	</delete>
+</mapper>

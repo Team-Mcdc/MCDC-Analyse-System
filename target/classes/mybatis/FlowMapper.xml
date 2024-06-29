@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.FlowDao">
+	<!-- 查询 -->
+	<select id="selectunit"  resultType="po.Unit">
+		select * from unit
+	</select>
+	<!-- 在你的 Mapper XML 文件中 -->
+	<select id="selectUnitByName" resultType="po.Unit" parameterType="string">
+    SELECT * FROM unit
+    WHERE UnitName LIKE CONCAT('%', #{search}, '%')
+	</select>
+
+	<select id="selectflowdsh" resultType="po.Flow" parameterType="string">
+    SELECT * FROM bookcirculation WHERE flow =#{flow} AND tounit =#{tounit}
+	</select>
+	<select id="selectflowbyunit" resultType="po.Flow" parameterType="string">
+    SELECT * FROM bookborrowing WHERE fromunit =#{fromunit} 
+	</select>
+	<select id="selectflowdsh2" resultType="po.Flow" parameterType="string">
+    SELECT * FROM bookcirculation WHERE flow =#{flow} AND fromunit =#{fromunit}
+	</select>
+	<select id="selectownborrow" resultType="po.Flow" parameterType="string">
+    SELECT * FROM bookborrowing WHERE state =#{state} AND BorrowingAccountID =#{borrowingaccountid}
+	</select>
+	<select id="selectborrow" resultType="po.Flow" parameterType="string">
+    SELECT * FROM bookborrowing WHERE state =#{state} AND fromunit =#{fromunit}
+	</select>
+	<select id="selectbookbyborrowid" resultType="String">
+    SELECT BookID FROM bookcirculation WHERE BorrowingID = #{borrowingid}
+	</select>
+	<select id="selectbookbyborrowid2" resultType="String">
+    SELECT BookID FROM bookborrowing WHERE BorrowingID = #{borrowingid}
+	</select>
+	
+	<!-- 添加-->
+	<insert id="addborrow" parameterType="po.Flow">
+		insert into bookborrowing(BookID,BorrowingTime,BorrowingReason,Borrower,BorrowerContact,state,BorrowingAccountID,ReturnTime)
+		 values(#{bookid},#{borrowingtime},#{borrowingreason},#{borrower},#{borrowercontact},#{state},#{borrowingaccountid},#{yujireturntime})
+	</insert>
+	<insert id="addflow" parameterType="po.Flow">
+		insert into bookcirculation (BookID,BorrowingTime,BorrowingReason,Borrower,BorrowerContact,fromunit,tounit,flow,BorrowingAccountID)
+		 values(#{bookid},#{borrowingtime},#{borrowingreason},#{borrower},#{borrowercontact},#{fromunit},#{tounit},#{flow},#{borrowingaccountid})
+	</insert>
+	
+	<!-- 更新用户登陆时间-->
+	
+	 <update id="updateflowbyid" parameterType="po.Flow">
+        UPDATE bookcirculation
+        SET flow = #{flow} 
+        WHERE BorrowingID= #{borrowingid}
+         </update>
+         
+          <update id="updatebackbyid" parameterType="po.Flow">
+        UPDATE bookcirculation
+        SET isback = #{isback} 
+        WHERE BorrowingID= #{borrowingid}
+         </update>
+         
+           <update id="updatereaderbackbyid" parameterType="po.Flow">
+        UPDATE bookborrowing
+        SET isback = #{isback} 
+        WHERE BorrowingID= #{borrowingid}
+         </update>
+        
+       <update id="updatebookreturntime" parameterType="po.Flow">
+        UPDATE bookcirculation
+        SET ReturnTime = NOW() 
+        WHERE BorrowingID= #{borrowingid}
+         </update>
+         
+         <update id="updatestatebyid" parameterType="po.Flow">
+        UPDATE bookborrowing
+        SET state = #{state} 
+        WHERE BorrowingID= #{borrowingid}
+         </update>
+   
+	
+	
+	<!-- 删除单位 -->
+	<delete id="deleteunit" parameterType="String"> 
+		delete from unit where UnitID = #{unitid}
+	</delete>
+	<delete id="deleteuserrole" parameterType="String"> 
+		delete from userrole  where UserID= #{userid}
+	</delete>
+</mapper>

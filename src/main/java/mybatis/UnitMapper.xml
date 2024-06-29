@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UnitDao">
+	<!-- 查询 -->
+	<select id="selectunit"  resultType="po.Unit">
+		select * from unit
+	</select>
+	<!-- 在你的 Mapper XML 文件中 -->
+	<select id="selectUnitByName" resultType="po.Unit" parameterType="string">
+    SELECT * FROM unit
+    WHERE UnitName LIKE CONCAT('%', #{search}, '%')
+	</select>
+
+	<select id="selectUnitByid" resultType="po.Unit" parameterType="string">
+    SELECT * FROM unit WHERE UnitID =#{unitid}
+	</select>
+	
+	<!-- 添加-->
+	<insert id="addunit" parameterType="po.Unit">
+		insert into unit (UnitName,ContactPerson,ContactAddress,ContactPhone,EmailAddress) values(#{unitname},#{contactperson},#{contactaddress},#{contactphone},#{emailaddress})
+	</insert>
+	
+	
+	<!-- 更新用户登陆时间-->
+	
+	 <update id="updateunit" parameterType="po.Unit">
+        UPDATE unit
+        SET UnitName = #{unitname},
+            ContactPerson = #{contactperson},
+            Contactphone = #{contactphone},
+            EmailAddress = #{emailaddress},
+            ContactAddress = #{contactaddress},
+            UnitType = #{unittype}
+        WHERE UnitID= #{unitid}
+         </update>
+	
+	
+	<!-- 删除单位 -->
+	<delete id="deleteunit" parameterType="String"> 
+		delete from unit where UnitID = #{unitid}
+	</delete>
+	<delete id="deleteuserrole" parameterType="String"> 
+		delete from userrole  where UserID= #{userid}
+	</delete>
+</mapper>
